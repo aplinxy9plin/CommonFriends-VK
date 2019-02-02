@@ -69,7 +69,7 @@ class App extends Component {
                             before={item.photo_200 ? <Avatar src={item.photo_200}/> : null}
                             description={item.city && item.city.title ? item.city.title : ''}
                           >
-                            {`${item.first_name} ${item.last_name} ${index}`}
+                            {`${item.first_name} ${item.last_name}`}
                           </ListItem></List>
                         });
                         this1.setState({
