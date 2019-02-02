@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 // import {View} from '@vkontakte/vkui'
 import '@vkontakte/vkui/dist/vkui.css';
-import { View, Panel, PanelHeader, FormLayout, FormLayoutGroup, Input, Button, Alert, List, ListItem, Avatar, Group } from '@vkontakte/vkui';
+import { View, Panel, PanelHeader, FormLayout, FormLayoutGroup, Input, Button, Alert, List, ListItem, Avatar, Group, ScreenSpinner } from '@vkontakte/vkui';
 const VK = window.VK;
 
 class App extends Component {
@@ -11,9 +11,10 @@ class App extends Component {
     super(props)
     this.state = {
       user1: "",
-      user2: "1",
+      user2: "",
       common_friends: null,
-      popout: null
+      popout: null,
+      some: ''
     }
     this.test = this.test.bind(this);
     this.auth = this.auth.bind(this);
@@ -39,9 +40,11 @@ class App extends Component {
   test(){
     var user1 = this.state.user1,
         user2 = this.state.user2;
+    console.log(user1, user2);
     var this1 = this;
     var tmp = user1.split("https://vk.com/"); user1 = tmp[1];
     tmp = user2.split("https://vk.com/"); user2 = tmp[1];
+    this.setState({ popout: <ScreenSpinner /> });
     if(user1 !== undefined && user2 !== undefined && user1 !== '' && user2 !== '' && user1 !== user2){
       VK.api("users.get", {"user_ids": user1+","+user2,"v":"5.73"}, function (users) {
         var all_friends = [];
@@ -70,6 +73,7 @@ class App extends Component {
                           </ListItem></List>
                         });
                         this1.setState({
+                          popout: null,
                           common_friends: unique1
                         })
                       }
@@ -105,8 +109,8 @@ class App extends Component {
       this1.setState({
         now_page: <FormLayout>
             <FormLayoutGroup top="Ссылки" bottom="Сюда необходимо ввести ссылки на страницы друзей в формате 'https://vk.com/aplinxy9plin', общих друзей которых необходимо получить">
-              <Input onChange={evt => this.setState({user1: evt.target.value})} type="text"/>
-              <Input onChange={evt => this.setState({user2: evt.target.value})} type="text"/>
+              <Input onChange={evt => this1.setState({user1: evt.target.value})} type="text"/>
+              <Input onChange={evt => this1.setState({user2: evt.target.value})} type="text"/>
             </FormLayoutGroup>
             <Button onClick={this.test} size="xl">Получить список</Button>
           </FormLayout>
